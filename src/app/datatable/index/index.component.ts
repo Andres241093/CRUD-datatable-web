@@ -1,7 +1,11 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild, Inject} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
+import { CreateModalComponent } from '../create-modal/create-modal.component';
+import { UpdateModalComponent } from '../update-modal/update-modal.component';
 
 export interface UserData {
   id: string;
@@ -25,18 +29,30 @@ const NAMES: string[] = [
 })
 export class IndexComponent implements AfterViewInit  {
 
- displayedColumns: string[] = ['id', 'name', 'progress', 'color'];
+ displayedColumns: string[] = ['code','description','price','edit','delete'];
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator, {static:false}) paginator: MatPaginator;
   @ViewChild(MatSort,{static:false}) sort: MatSort;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
     // Create 100 users
     const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
+  }
+
+  openDeleteModal(){
+    this.dialog.open(DeleteModalComponent);
+  }
+
+  openCreateModal(){
+    this.dialog.open(CreateModalComponent);
+  }
+
+  openUpdateModal(){
+    this.dialog.open(UpdateModalComponent);
   }
 
   ngAfterViewInit() {
