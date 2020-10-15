@@ -3,10 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
 
 const routes: Routes = [
-{
-	path: 'home',
-	loadChildren: () => import('./datatable/datatable.module').then(m => m.DatatableModule)
-}
+	{
+		path: 'home',
+		loadChildren: () => import('./datatable/datatable.module').then(m => m.DatatableModule)
+	},
+	{path:'**', redirectTo: '/home/index'}
 ];
 
 @NgModule({
