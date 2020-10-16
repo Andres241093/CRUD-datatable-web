@@ -1,2 +1,23 @@
-<p>create-modal works!</p>
-<button mat-raised-button (click)="closeModal()">Cerrar</button>
+<div fxLayout="column">
+	<span style="font-size: 20px;">Nuevo artículo</span>
+	<br>
+	<mat-divider></mat-divider>
+	<br>
+	<div fxLayout="column" [formGroup]="createFormGroup">
+		<mat-form-field>
+			<mat-label>Descripción</mat-label>
+			<input matInput formControlName="description">
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>Precio</mat-label>
+			<input matInput type="number" formControlName="price">
+		</mat-form-field>
+	</div>
+	<br>
+	<mat-divider></mat-divider>
+	<br>
+	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+		<button mat-raised-button (click)="closeModal()" fxFlex="45">Cancelar</button>
+		<button mat-raised-button color="primary" (click)="closeModal()" fxFlex="45">Guardar</button>
+	</div>
+</div>
