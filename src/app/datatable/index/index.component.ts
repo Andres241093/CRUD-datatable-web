@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild, Inject} from '@angular/core';
+import {OnInit, Component, ViewChild, Inject} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -6,6 +6,9 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { CreateModalComponent } from '../create-modal/create-modal.component';
 import { UpdateModalComponent } from '../update-modal/update-modal.component';
+import { ArticleService } from 'src/app/services/article.service';
+import { Article } from 'src/app/models/article.model';
+import { finalize } from 'rxjs/operators';
 
 export interface UserData {
   id: string;
@@ -13,39 +16,46 @@ export interface UserData {
   progress: string;
   color: string;
 }
-const COLORS: string[] = [
-'maroon', 'red', 'orange', 'yellow', 'olive', 'green', 'purple', 'fuchsia', 'lime', 'teal',
-'aqua', 'blue', 'navy', 'black', 'gray'
-];
-const NAMES: string[] = [
-'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
-];
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss']
 })
-export class IndexComponent implements AfterViewInit  {
+export class IndexComponent implements OnInit  {
 
+
+ articleList: Array<Article> = [];
  displayedColumns: string[] = ['code','description','price','edit','delete'];
- dataSource: MatTableDataSource<UserData>;
+ dataSource: MatTableDataSource<Article>;
 
  @ViewChild(MatPaginator, {static:false}) paginator: MatPaginator;
  @ViewChild(MatSort,{static:false}) sort: MatSort;
 
- constructor(public dialog: MatDialog) {
-  // Create 100 users
-  const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
+ constructor(public dialog: MatDialog,private articleS: ArticleService) {
 
-  // Assign the data to the data source for the table to render
-  this.dataSource = new MatTableDataSource(users);
+  this.articleS.getArticles()
+  .pipe(finalize(()=> {
+    this.dataSource = new MatTableDataSource(this.articleList)
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }))
+  .subscribe(res=>{
+    res.map(data=>{
+      const article = new Article();
+      article.code = data['id'];
+      article.description = data['description'];
+      article.price = data['price'];
+      this.articleList.push(article);
+    });
+  });
 }
 
-openDeleteModal(){
-  this.dialog.open(DeleteModalComponent,{
-    width: '30vw',
+openDeleteModal(id){
+  this.dialog.open(DeleteModalComponent,{ //30vw
+    data: {
+      article_id: id
+    }
   });
 }
 
@@ -55,15 +65,16 @@ openCreateModal(){
   });
 }
 
-openUpdateModal(){
-  this.dialog.open(UpdateModalComponent,{
-    width: '50vw',
+openUpdateModal(data){
+  this.dialog.open(UpdateModalComponent,{//50vw
+    data: {
+      article: data
+    }
   });
 }
 
-ngAfterViewInit() {
-  this.dataSource.paginator = this.paginator;
-  this.dataSource.sort = this.sort;
+ngOnInit() {
+
 }
 
 applyFilter(event: Event) {
@@ -75,16 +86,4 @@ applyFilter(event: Event) {
   }
 }
 
-}
-/** Builds and returns a new User. */
-function createNewUser(id: number): UserData {
-  const name = NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-  NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    color: COLORS[Math.round(Math.random() * (COLORS.length - 1))]
-  };
 }

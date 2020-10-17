@@ -10,39 +10,39 @@
       <!-- ID Column -->
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+        <td mat-cell *matCellDef="let article"> {{article.code}} </td>
       </ng-container>
 
       <!-- Progress Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-        <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+        <td mat-cell *matCellDef="let article"> {{article.description}} </td>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        <td mat-cell *matCellDef="let article"> {{article.price}} </td>
       </ng-container>
 
       <!-- Color Column -->
       <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.name"> 
-          <button mat-raised-button color="primary" (click)="openUpdateModal()">Modificar</button>
+        <td mat-cell *matCellDef="let article"> 
+          <button mat-raised-button color="primary" (click)="openUpdateModal(article)">Modificar</button>
         </td>
       </ng-container>
 
       <!-- Color Column -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Eliminar </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.name"> 
-          <button mat-raised-button color="warn" (click)="openDeleteModal()">Eliminar</button>
+        <td mat-cell *matCellDef="let article"> 
+          <button mat-raised-button color="warn" (click)="openDeleteModal(article.code)">Eliminar</button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let article; columns: displayedColumns;"></tr>
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>

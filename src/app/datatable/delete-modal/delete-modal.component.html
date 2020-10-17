@@ -1,10 +1,10 @@
-<div fxLayout="column" fxLayoutGap="20px">
+<div style="width: 30vw;" fxLayout="column" fxLayoutGap="20px">
 	<div fxLayout="column" fxLayoutAlign="center center">
 		<span style="font-size: 20px;">¿Desea eliminar este registro?</span>
 		<mat-icon>delete</mat-icon>
 	</div>
 	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
 		<button mat-raised-button (click)="closeModal()" fxFlex="45">No</button>
-		<button mat-raised-button color="warn" (click)="closeModal()" fxFlex="45">Sí</button>
+		<button mat-raised-button color="warn" (click)="deleteArticle()" fxFlex="45">Sí</button>
 	</div>
 </div>
